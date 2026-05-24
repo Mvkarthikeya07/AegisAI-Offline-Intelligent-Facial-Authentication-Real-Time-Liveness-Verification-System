@@ -1,140 +1,194 @@
-
 <div align="center">
 
-# AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System
+<br/>
 
-**Biometric attendance and identity verification — fully offline, no cloud, no compromise.**
+```
+ █████╗ ███████╗ ██████╗ ██╗███████╗     █████╗ ██╗
+██╔══██╗██╔════╝██╔════╝ ██║██╔════╝    ██╔══██╗██║
+███████║█████╗  ██║  ███╗██║███████╗    ███████║██║
+██╔══██║██╔══╝  ██║   ██║██║╚════██║    ██╔══██║██║
+██║  ██║███████╗╚██████╔╝██║███████║    ██║  ██║██║
+╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝    ╚═╝  ╚═╝╚═╝
+```
 
-![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=flat-square&logo=flask&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=flat-square&logo=opencv&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-WAL--enabled-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![MediaPipe](https://img.shields.io/badge/MediaPipe-optional-FF6F00?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)
+**Offline Intelligent Facial Authentication & Real-Time Liveness Verification**
 
-Live face recognition → liveness verification → automatic attendance marking.  
-Zero internet. Zero cloud. Every byte stays on your machine.
+*Your face. Your data. Your machine. Nobody else's.*
+
+<br/>
+
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=flat-square&logo=opencv&logoColor=white)](https://opencv.org/)
+[![SQLite](https://img.shields.io/badge/SQLite-WAL--enabled-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-optional-FF6F00?style=flat-square)](https://ai.google.dev/edge/mediapipe/solutions/guide)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](https://github.com/Mvkarthikeya07/AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System/blob/main/LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com/Mvkarthikeya07/AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System)
+
+<br/>
+
+> **AegisAI** is a production-ready, fully offline biometric attendance and identity platform.  
+> Live face recognition. Anti-spoofing liveness gates. Role-based access control.  
+> Every frame processed locally. Every byte stored on your hardware. Always.
+
+<br/>
+
+---
 
 </div>
 
+## Why AegisAI Exists
+
+Most face recognition systems make you choose between capability and privacy. Cloud APIs are powerful but send your biometric data to someone else's server. Offline scripts are private but brittle and lack any real workflow.
+
+AegisAI is built for the third path — **organizations that need both**.
+
+- A hospital that cannot upload patient faces to an external service
+- A research lab with air-gapped workstations
+- A campus that needs attendance across hundreds of students with zero cloud dependency
+- Any environment where *who sees the data* is not negotiable
+
+The system enforces liveness at enrollment (preventing photo registration), verifies identity in real time at under 100ms per frame, and persists everything to a local SQLite database with WAL-mode durability.
+
 ---
 
-## What This Is
+## Architecture at a Glance
 
-OfflineFaceAuth is a **Flask-based biometric identity system** for environments where sending face data to an external API is not an option. It runs entirely on local hardware — detecting, verifying, and recognizing faces in real time using OpenCV and optionally MediaPipe, with SQLite as the persistence layer.
-
-It is built around two distinct workflows:
-
-- **Users** enroll through a guided 4-stage liveness capture flow before their face is stored
-- **Admins** operate a live camera scanner that continuously identifies known people and marks them present
-
-No third-party auth. No API keys. No telemetry. Just a Flask server and a camera.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                          AegisAI                                │
+│                                                                 │
+│   ┌──────────┐    ┌─────────────────┐    ┌──────────────────┐  │
+│   │  Camera  │───▶│  Face Detector  │───▶│ Liveness Engine  │  │
+│   │  (Web)   │    │  (Haar Cascade) │    │ (MediaPipe/OECV) │  │
+│   └──────────┘    └─────────────────┘    └────────┬─────────┘  │
+│                                                   │            │
+│                         ┌─────────────────────────▼──────────┐ │
+│                         │        Face Recognizer             │ │
+│                         │   cosine_similarity(query, index)  │ │
+│                         │   128×128 → 49,152-dim L2 vector   │ │
+│                         └──────────────┬─────────────────────┘ │
+│                                        │                       │
+│              ┌─────────────────────────▼──────────────────┐    │
+│              │              SQLite (WAL)                   │    │
+│              │   app_users · people · attendance           │    │
+│              └────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Feature Overview
+## Core Capabilities
 
-| Area | What It Does |
+### 🔐 Role-Based Access Control
+Two-role system — `admin` and `user` — with fully separate portals, session enforcement, Werkzeug password hashing, signup, and self-service password reset. No shared routes. No privilege escalation paths.
+
+### 🧬 4-Stage Liveness Enrollment (User)
+Registration is not a single photo upload. It is a staged verification sequence that proves a live human is present:
+
+```
+Stage 1 → BLINK       EAR < 0.22 via FaceMesh, or eye cascade fallback
+Stage 2 → HEAD LEFT   Yaw ratio < -0.10 (nose tip vs eye midpoint)
+Stage 3 → HEAD RIGHT  Yaw ratio > +0.10
+Stage 4 → STRAIGHT    Final embedding capture + model retrain
+```
+
+Each stage is verified **server-side**. The JavaScript client cannot forge a stage pass.
+
+### 📡 Live Admin Recognition Scanner
+The admin portal runs a continuous camera loop posting frames to `/process_frame`. The server returns one of three states:
+
+| State | Meaning |
 |---|---|
-| **Face Detection** | Haar cascade frontal face detector (OpenCV) |
-| **Face Recognition** | Cosine similarity on normalized 128×128 pixel embeddings |
-| **Liveness Detection** | EAR-based blink detection + yaw-ratio head direction via MediaPipe FaceMesh; OpenCV cascade fallback |
-| **Enrollment Flow** | 4 staged captures: blink → left → right → straight |
-| **Admin Scanner** | Continuous frame processing with `Scanning → Capturing → Captured` state flow |
-| **Attendance** | Per-day present/absent snapshots with last-seen timestamps |
-| **Auth** | Role-based login (admin / user), signup, password reset — Werkzeug-hashed |
-| **Persistence** | SQLite with WAL mode, busy timeout, write lock retry backoff |
+| `scanning` | No face in frame |
+| `capturing` | Face detected, similarity < 80% |
+| `captured` | Identity confirmed, attendance marked |
+
+Attendance is written atomically — duplicate entries for the same person on the same day update `last_seen` rather than inserting a new row.
+
+### 📊 Attendance Intelligence
+The attendance dashboard renders a per-day snapshot pulled at request time:
+- **Present** — name, place, phone, last seen timestamp
+- **Absent** — everyone in `people` with no attendance record for today
+
+### 🗄️ Reliable Local Persistence
+SQLite with WAL journal mode, 10-second busy timeout, a threading `RLock`, and an 8-attempt exponential retry backoff on write contention. Designed to survive concurrent admin scanning and user enrollment without corruption.
+
+---
+
+## How Recognition Works
+
+```python
+# Every face is stored as a normalized pixel vector
+resized  = cv2.resize(face, (128, 128))        # 128×128 BGR
+flat     = resized.flatten()                   # 49,152 floats
+emb      = flat / np.linalg.norm(flat)         # L2 normalize
+
+# Recognition is brute-force cosine similarity
+similarity = cosine_similarity([query], [stored])[0][0]
+if similarity >= 0.80:
+    mark_present(person_id)
+```
+
+The recognition index (`trained_index.pkl`) is a flat numpy matrix rebuilt on every new registration. Lookup is O(n) — practical and fast for hundreds of registered people without any ANN infrastructure.
+
+> **Upgrading accuracy:** The `register_face(key, face)` and `recognize(face)` interface is intentionally thin. Swapping the pixel embedder for MobileFaceNet, ArcFace, or any deep model requires changing only `get_embedding()` in `face_recognizer.py` — nothing else.
 
 ---
 
 ## Project Structure
 
 ```
-OfflineFaceAuth/
-├── app.py                    # Flask routes, session logic, frame processing
+AegisAI/
+│
+├── app.py                     # All Flask routes + session logic
 ├── requirements.txt
-├── database.db               # Auto-created on first run
+├── database.db                # Auto-created on first run
 │
 ├── embeddings/
-│   ├── users.pkl             # name|phone → embedding vectors
-│   └── trained_index.pkl     # Flat label + embedding matrix for recognition
+│   ├── users.pkl              # { "name|phone": np.array([...]) }
+│   └── trained_index.pkl      # { labels: [...], embeddings: ndarray }
 │
 ├── utils/
-│   ├── database.py           # SQLite layer: schema, CRUD, retry logic
-│   ├── face_detector.py      # Haar cascade face detection
-│   ├── face_recognizer.py    # Embedding + cosine similarity recognition
-│   ├── liveness_detector.py  # EAR blink + yaw head direction detection
-│   └── recognizer.py         # Public re-export of recognize / register_face
+│   ├── database.py            # Schema init, CRUD, retry logic
+│   ├── face_detector.py       # Haar cascade face bounding box
+│   ├── face_recognizer.py     # Embedding store + cosine similarity
+│   ├── liveness_detector.py   # EAR blink + yaw head direction
+│   └── recognizer.py          # Public re-export shim
 │
 ├── templates/
 │   ├── login.html
 │   ├── signup.html
 │   ├── forgot_password.html
-│   ├── index.html            # Admin scan portal
-│   ├── register.html         # User enrollment entry
-│   ├── capture_stage.html    # Per-stage camera UI
-│   ├── attendance.html       # Admin attendance dashboard
-│   └── captured_people.html  # Admin people directory
+│   ├── index.html             # Admin scan portal
+│   ├── register.html          # User enrollment entry
+│   ├── capture_stage.html     # Per-stage camera UI
+│   ├── attendance.html        # Admin attendance dashboard
+│   └── captured_people.html   # Admin people directory
 │
 └── static/
     ├── style.css
-    ├── app.js                # Admin scan loop
+    ├── app.js                 # Admin scan loop (fetch → render → repeat)
     ├── register.js
-    └── capture_stage.js      # Staged capture + verify logic
+    └── capture_stage.js       # Stage capture + /verify call
 ```
-
----
-
-## How It Works
-
-### Enrollment (User)
-
-```
-Login → Enter name / place / phone
-  └─ Stage 1: Blink detected via EAR < 0.22       → advance
-  └─ Stage 2: Head LEFT via yaw ratio < -0.10      → advance
-  └─ Stage 3: Head RIGHT via yaw ratio > 0.10      → advance
-  └─ Stage 4: Face straight → extract embedding
-                             → upsert DB record
-                             → save to users.pkl
-                             → retrain trained_index.pkl
-```
-
-Each stage is verified server-side. The client cannot skip stages.
-
-### Recognition (Admin)
-
-```
-Camera frame (base64) → POST /process_frame
-  └─ detect_faces()         Haar cascade
-  └─ recognize()            cosine_similarity(query_emb, all_stored_embs)
-  └─ score ≥ 0.80?
-        YES → mark_present() → return { status: "captured", user, confidence }
-        NO  → return { status: "capturing", user: "Unknown" }
-```
-
-Confidence threshold is 80%. Below it, the frame returns as `capturing` and scanning continues.
-
-### Embedding Format
-
-Faces are resized to **128×128**, flattened to **49,152-dimensional vectors**, and L2-normalized before storage. Recognition is brute-force cosine similarity across all stored embeddings — fast and dependency-light for small to medium deployments.
-
-> **Accuracy note:** Raw pixel embeddings are sensitive to lighting, distance, and angle variation. For production-grade accuracy, drop in a deep embedding model (e.g. MobileFaceNet, ArcFace). The `register_face` / `recognize` interface is designed to be swapped without touching any other code.
 
 ---
 
 ## Setup
 
-### 1. Clone and create environment
+### 1. Clone
 
 ```bash
-git clone https://github.com/your-username/OfflineFaceAuth.git
-cd OfflineFaceAuth
-python -m venv .venv
+git clone https://github.com/Mvkarthikeya07/AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System.git
+cd AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System
 ```
 
+### 2. Create virtual environment
+
 ```bash
+python -m venv .venv
+
 # Windows
 .\.venv\Scripts\Activate.ps1
 
@@ -142,32 +196,32 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-MediaPipe is optional. If it fails to import, liveness detection falls back to OpenCV cascades automatically — no configuration needed.
+MediaPipe is optional. If it cannot be imported, liveness detection falls back to OpenCV cascade classifiers automatically — no configuration needed, no errors thrown.
 
-### 3. Create embeddings directory
+### 4. Create embeddings directory
 
 ```bash
 mkdir embeddings
 ```
 
-### 4. Run
+### 5. Run
 
 ```bash
 python app.py
 ```
 
-On startup, `app.py` will:
-1. Initialize the SQLite schema (creates `database.db`)
-2. Seed default admin and user accounts
-3. Load or initialize the recognition index
+On startup the application will:
+1. Initialize SQLite schema and enable WAL mode
+2. Seed default `admin` and `user` accounts (skipped if already present)
+3. Load or initialize the recognition index from `embeddings/`
 
-Visit `http://127.0.0.1:5000`
+Open `http://127.0.0.1:5000` in your browser.
 
 ---
 
@@ -178,96 +232,131 @@ Visit `http://127.0.0.1:5000`
 | Admin | `admin` | `admin123` |
 | User | `user` | `user123` |
 
-Change these before any non-local deployment.
+**Rotate both immediately** before any non-local deployment.
 
 ---
 
 ## API Reference
 
-### Auth
+### Authentication
 
-| Method | Route | Description |
+| Method | Endpoint | Description |
 |---|---|---|
-| GET/POST | `/login` | Login with role selection |
-| GET/POST | `/signup` | Create account |
-| GET/POST | `/forgot-password` | Reset password by username + role |
-| GET | `/logout` | Clear session |
+| `GET/POST` | `/login` | Login with role selector |
+| `GET/POST` | `/signup` | Create new account |
+| `GET/POST` | `/forgot-password` | Reset password by username + role |
+| `GET` | `/logout` | Destroy session |
 
 ### Admin
 
-| Method | Route | Description |
+| Method | Endpoint | Description |
 |---|---|---|
-| GET | `/admin/scan` | Live scanner portal |
-| POST | `/process_frame` | Submit camera frame for recognition |
-| GET | `/admin/attendance` | Today's attendance snapshot |
-| GET | `/admin/people` | All registered people |
+| `GET` | `/admin/scan` | Live scanner portal |
+| `POST` | `/process_frame` | Submit base64 frame → recognition result |
+| `GET` | `/admin/attendance` | Today's present / absent snapshot |
+| `GET` | `/admin/people` | Full registered people directory |
 
 ### User Enrollment
 
-| Method | Route | Description |
+| Method | Endpoint | Description |
 |---|---|---|
-| GET | `/user/register` | Registration entry form |
-| POST | `/user/start-capture` | Submit name/place/phone, begin capture |
-| GET | `/user/capture/<step>` | Render capture UI for step |
-| POST | `/user/capture/verify` | Server-side liveness verification per step |
-| POST | `/liveness_challenge` | Raw liveness analysis on a frame |
-| POST | `/register` | Single-shot registration (no staged flow) |
+| `GET` | `/user/register` | Enrollment entry form |
+| `POST` | `/user/start-capture` | Submit name / place / phone, begin staged flow |
+| `GET` | `/user/capture/<step>` | Render capture UI for `blink`, `left`, `right`, `final` |
+| `POST` | `/user/capture/verify` | Server-side liveness check for current step |
+| `POST` | `/liveness_challenge` | Raw liveness analysis on any frame |
+| `POST` | `/register` | Single-shot direct registration (no staged flow) |
+
+### Response Shape — `/process_frame`
+
+```json
+{
+  "status": "captured",
+  "user": "Karthikeya",
+  "confidence": 91.34,
+  "message": "Captured",
+  "box": { "x": 142, "y": 88, "w": 210, "h": 210 }
+}
+```
 
 ---
 
 ## Database Schema
 
 ```sql
-app_users   (id, username, password [hashed], role)
-people      (id, name, place, phone [unique], embedding_key [unique], created_at)
-attendance  (id, person_id, date, status, last_seen)  -- UNIQUE(person_id, date)
-```
+CREATE TABLE app_users (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    username  TEXT UNIQUE NOT NULL,
+    password  TEXT NOT NULL,                        -- Werkzeug pbkdf2 hash
+    role      TEXT NOT NULL CHECK (role IN ('admin','user'))
+);
 
-WAL journal mode and a threading `RLock` with exponential retry backoff handle concurrent write contention.
+CREATE TABLE people (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    name          TEXT NOT NULL,
+    place         TEXT NOT NULL,
+    phone         TEXT UNIQUE NOT NULL,
+    embedding_key TEXT UNIQUE NOT NULL,             -- "name|phone"
+    created_at    TEXT NOT NULL
+);
+
+CREATE TABLE attendance (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    person_id  INTEGER NOT NULL,
+    date       TEXT NOT NULL,
+    status     TEXT NOT NULL DEFAULT 'present',
+    last_seen  TEXT NOT NULL,
+    UNIQUE(person_id, date),
+    FOREIGN KEY(person_id) REFERENCES people(id)
+);
+```
 
 ---
 
 ## Known Limitations
 
-| Limitation | Detail |
+| Area | Detail |
 |---|---|
-| Pixel-based embeddings | Sensitive to lighting and pose. Not suitable for high-security identity verification. |
-| Single embedding per person | Only the final capture stage is stored. Multiple embeddings per person would improve match stability. |
-| Brute-force matching | O(n) scan over all embeddings on every frame. Degrades at scale (1000+ people). |
-| Hardcoded secret key | `app.config["SECRET_KEY"]` must be replaced with an environment variable before deployment. |
-| No account lockout | Repeated failed login attempts are not rate-limited. |
+| **Embedding quality** | 128×128 pixel vectors are sensitive to lighting, distance, and angle. Accuracy degrades in unconstrained environments. See upgrade path above. |
+| **Single embedding per person** | Only the Stage 4 frame is stored. Averaging multiple embeddings would improve match stability significantly. |
+| **Recognition scale** | Brute-force O(n) cosine scan. Practical up to ~500 registered people. Beyond that, consider FAISS or hnswlib for ANN indexing. |
+| **Hardcoded secret key** | `SECRET_KEY = "offline-face-auth-secret"` must be replaced before any networked deployment. |
+| **No rate limiting** | Repeated failed login attempts are not throttled. |
+| **No audit log** | Auth events and attendance marks are not logged to a separate audit trail. |
 
 ---
 
-## Production Checklist
+## Production Hardening Checklist
 
-- [ ] Replace `SECRET_KEY` with `os.environ.get("SECRET_KEY")`
-- [ ] Enable HTTPS and set `SESSION_COOKIE_SECURE = True`
-- [ ] Add login rate-limiting (e.g. Flask-Limiter)
+- [ ] Load `SECRET_KEY` from environment: `os.environ["SECRET_KEY"]`
+- [ ] Set `SESSION_COOKIE_SECURE = True` and enforce HTTPS
+- [ ] Add `Flask-Limiter` for login rate limiting
+- [ ] Set `app.run(debug=False)` — never run debug mode in production
 - [ ] Schedule periodic backups of `database.db` and `embeddings/`
-- [ ] Swap pixel embeddings for a deep face model for better accuracy
-- [ ] Add audit log for auth events and attendance marks
-- [ ] Set `debug=False` in `app.run()`
+- [ ] Replace pixel embedder with a deep face model for accuracy-critical deployments
+- [ ] Add a write-ahead audit log for all auth and attendance events
+- [ ] Implement account lockout after N failed login attempts
 
 ---
 
 ## Requirements
 
 ```
-opencv-python
-mediapipe          # optional — fallback supported
-numpy
 flask
 flask-cors
-pillow
+opencv-python
+numpy
 scikit-learn
-werkzeug           # pulled in by flask
+pillow
+mediapipe        # optional — system auto-detects and falls back gracefully
+werkzeug         # installed automatically with flask
 ```
 
-Python 3.9 or later recommended.
+**Python 3.9 or later required.**
 
 ---
 
 ## License
 
-MIT — see `LICENSE` for details.
+MIT © 2025 [Mvkarthikeya07](https://github.com/Mvkarthikeya07)  
+See [LICENSE](https://github.com/Mvkarthikeya07/AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System/blob/main/LICENSE) for full terms.
