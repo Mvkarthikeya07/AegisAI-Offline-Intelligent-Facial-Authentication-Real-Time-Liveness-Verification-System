@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration Details</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <h1>User Registration</h1>
+    <div>
+      <span class="chip">{{ username }}</span>
+      <a class="btn-link" href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <main class="register-layout">
+    <section class="card glass form-card">
+      <h2>Enter User Details</h2>
+      <p class="muted">After entering details, continue to multi-stage face capture.</p>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+      <form method="post" action="/user/start-capture">
+        <label>Name</label>
+        <input name="name" type="text" placeholder="Full name" required>
+
+        <label>Place</label>
+        <input name="place" type="text" placeholder="City / Area" required>
+
+        <label>Phone Number</label>
+        <input name="phone" type="text" placeholder="Phone number" required>
+
+        <button type="submit" class="btn-primary">Capture Your Face</button>
+      </form>
+    </section>
+
+    <section class="card glass">
+      <h2>Capture Flow</h2>
+      <div class="saved-details">
+        <p><strong>Stage 1:</strong> Blink capture</p>
+        <p><strong>Stage 2:</strong> Turn left capture</p>
+        <p><strong>Stage 3:</strong> Turn right capture</p>
+        <p><strong>Stage 4:</strong> Final face registration</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

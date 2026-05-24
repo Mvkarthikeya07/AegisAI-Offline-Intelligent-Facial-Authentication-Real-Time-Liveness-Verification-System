@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Signup | OfflineFaceAuth</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-grid">
+    <section class="brand-panel glass">
+      <p class="eyebrow">SECURE ACCOUNT REGISTRATION</p>
+      <h1>Create {{ 'Admin' if role == 'admin' else 'User' }} Access</h1>
+      <p class="lead">All passwords are stored as hashed credentials for stronger privacy and platform security.</p>
+      <div class="pill-row">
+        <span class="pill">Password Hashing</span>
+        <span class="pill">Role-bound Access</span>
+        <span class="pill">Audit-ready Workflow</span>
+      </div>
+    </section>
+
+    <form class="auth-panel glass" method="post" action="/signup">
+      <h2>{{ 'Admin Signup' if role == 'admin' else 'User Signup' }}</h2>
+      <p class="muted">Create your secure account credentials.</p>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+      <input type="hidden" name="role" value="{{ role }}">
+
+      <label>Username</label>
+      <input type="text" name="username" minlength="4" required>
+
+      <label>Password</label>
+      <div class="password-wrap">
+        <input type="password" id="signupPassword" name="password" minlength="8" required>
+        <button type="button" class="eye-btn" onclick="togglePassword('signupPassword', this)">&#128065;</button>
+      </div>
+
+      <label>Confirm Password</label>
+      <div class="password-wrap">
+        <input type="password" id="signupConfirmPassword" name="confirm_password" minlength="8" required>
+        <button type="button" class="eye-btn" onclick="togglePassword('signupConfirmPassword', this)">&#128065;</button>
+      </div>
+
+      <button type="submit" class="btn-primary">Create Account</button>
+
+      <div class="role-switch">
+        <a href="/signup?role=admin" class="{{ 'active' if role == 'admin' else '' }}">Admin</a>
+        <a href="/signup?role=user" class="{{ 'active' if role == 'user' else '' }}">User</a>
+      </div>
+
+      <p class="auth-linkline"><a href="/login?role={{ role }}">Already have an account? Sign in</a></p>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.classList.add('active-eye');
+      } else {
+        input.type = 'password';
+        btn.classList.remove('active-eye');
+      }
+    }
+  </script>
+</body>
+</html>

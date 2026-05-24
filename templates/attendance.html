@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Details</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <h1>Attendance Details</h1>
+    <div>
+      <span class="chip">{{ today }}</span>
+      <a class="btn-link" href="/admin/scan">Back to Scan</a>
+      <a class="btn-link" href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <main class="attendance-grid">
+    <section class="card glass">
+      <h2>Present ({{ present|length }})</h2>
+      <table>
+        <thead><tr><th>Name</th><th>Place</th><th>Phone</th><th>Last Seen</th></tr></thead>
+        <tbody>
+          {% for p in present %}
+          <tr><td>{{ p.name }}</td><td>{{ p.place }}</td><td>{{ p.phone }}</td><td>{{ p.last_seen }}</td></tr>
+          {% endfor %}
+          {% if present|length == 0 %}<tr><td colspan="4">No attendance records yet.</td></tr>{% endif %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card glass">
+      <h2>Absent ({{ absent|length }})</h2>
+      <table>
+        <thead><tr><th>Name</th><th>Place</th><th>Phone</th></tr></thead>
+        <tbody>
+          {% for p in absent %}
+          <tr><td>{{ p.name }}</td><td>{{ p.place }}</td><td>{{ p.phone }}</td></tr>
+          {% endfor %}
+          {% if absent|length == 0 %}<tr><td colspan="3">No absentees currently.</td></tr>{% endif %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

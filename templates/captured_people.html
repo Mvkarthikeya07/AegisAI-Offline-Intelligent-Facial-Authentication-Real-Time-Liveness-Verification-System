@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captured People</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <h1>Captured People</h1>
+    <div>
+      <span class="chip">{{ username }}</span>
+      <a class="btn-link" href="/admin/scan">Back to Scan</a>
+      <a class="btn-link" href="/admin/attendance">Attendance</a>
+      <a class="btn-link" href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <main class="attendance-grid">
+    <section class="card glass" style="grid-column: 1 / -1;">
+      <h2>Registered/Captured People ({{ people|length }})</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Place of Living</th>
+            <th>Phone Number</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in people %}
+          <tr>
+            <td>{{ p.name }}</td>
+            <td>{{ p.place }}</td>
+            <td>{{ p.phone }}</td>
+            <td>{{ p.created_at }}</td>
+          </tr>
+          {% endfor %}
+          {% if people|length == 0 %}
+          <tr><td colspan="4">No captured people found yet.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

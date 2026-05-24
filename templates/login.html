@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Login | OfflineFaceAuth</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-grid">
+    <section class="brand-panel glass">
+      <p class="eyebrow">PRIVATE IDENTITY PLATFORM</p>
+      <h1>OfflineFaceAuth Elite</h1>
+      <p class="lead">Role-protected access with offline face intelligence, anti-spoof verification, and secure attendance operations.</p>
+      <div class="pill-row">
+        <span class="pill">Zero Cloud Dependency</span>
+        <span class="pill">Liveness Guard</span>
+        <span class="pill">Role Segmentation</span>
+      </div>
+    </section>
+
+    <form class="auth-panel glass" method="post" action="/login">
+      <h2>{{ 'Admin Login' if role == 'admin' else 'User Login' }}</h2>
+      <p class="muted">Authenticate to continue.</p>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+      <input type="hidden" name="role" value="{{ role }}">
+
+      <label>Username</label>
+      <input type="text" name="username" required>
+
+      <label>Password</label>
+      <div class="password-wrap">
+        <input type="password" id="loginPassword" name="password" required>
+        <button type="button" class="eye-btn" onclick="togglePassword('loginPassword', this)">&#128065;</button>
+      </div>
+
+      <button type="submit" class="btn-primary">Sign In</button>
+
+      <div class="role-switch">
+        <a href="/login?role=admin" class="{{ 'active' if role == 'admin' else '' }}">Admin</a>
+        <a href="/login?role=user" class="{{ 'active' if role == 'user' else '' }}">User</a>
+      </div>
+      <p class="auth-linkline"><a href="/signup?role={{ role }}">Need account? Create {{ role }} account</a></p>
+      <p class="auth-linkline"><a href="/forgot-password?role={{ role }}">Forgot password?</a></p>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.classList.add('active-eye');
+      } else {
+        input.type = 'password';
+        btn.classList.remove('active-eye');
+      }
+    }
+  </script>
+</body>
+</html>

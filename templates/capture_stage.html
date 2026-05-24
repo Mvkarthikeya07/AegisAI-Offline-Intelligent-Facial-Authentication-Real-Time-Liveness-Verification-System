@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Capture Stage</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <h1>Face Capture Workflow</h1>
+    <div>
+      <span class="chip">{{ username }}</span>
+      <a class="btn-link" href="/user/register">Back</a>
+      <a class="btn-link" href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <main class="register-layout">
+    <section class="card glass form-card">
+      <h2>{{ prompt }}</h2>
+      <p class="muted">Follow the instruction and click capture.</p>
+
+      <div class="saved-details">
+        {% for stage_name in stages %}
+          <p><strong>{{ loop.index }}.</strong> {{ stage_name|upper }} {% if stage_name == step %}<span class="green">(Current)</span>{% endif %}</p>
+        {% endfor %}
+      </div>
+
+      <button id="stageCaptureBtn" class="btn-primary">{% if step == 'final' %}Final Register{% else %}Capture This Stage{% endif %}</button>
+      <p id="stageMessage" class="muted"></p>
+      <div id="finalDetails" class="saved-details hidden"></div>
+    </section>
+
+    <section class="card glass camera-card">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="overlay"></canvas>
+    </section>
+  </main>
+
+  <script>
+    window.CAPTURE_STEP = "{{ step }}";
+  </script>
+  <script src="/static/capture_stage.js"></script>
+</body>
+</html>
