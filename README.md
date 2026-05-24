@@ -30,7 +30,7 @@
 
 ---
 
-## 🏆 Built for HACKATHON 7.0
+## 🏆 Built for NHAI HACKATHON 7.0
 
 <br/>
 
