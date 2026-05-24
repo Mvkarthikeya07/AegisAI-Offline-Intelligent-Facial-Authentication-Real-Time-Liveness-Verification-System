@@ -2,10 +2,9 @@
 
 <br/>
 
-```
+
 # AegisAI-Offline-Intelligent-Facial-Authentication-Real-Time-Liveness-Verification-System
 
-```
 
 **Offline Intelligent Facial Authentication & Real-Time Liveness Verification**
 
