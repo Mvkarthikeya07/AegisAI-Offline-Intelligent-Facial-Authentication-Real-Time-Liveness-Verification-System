@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Register your biometric identity with AegisAI multi-stage face capture">
+<title>Register Identity | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <div class="topbar-brand">
+      <span class="topbar-icon">&#128100;</span>
+      <h1>Register Identity</h1>
+    </div>
+    <nav class="topbar-nav">
+      <span class="chip">&#128100; {{ username }}</span>
+      <a class="btn-link btn-link-danger" href="/logout">&#9211; Logout</a>
+    </nav>
+  </header>
+
+  <main class="register-layout">
+    <section class="card glass form-card">
+      <div class="card-header">
+        <span class="card-icon">&#128221;</span>
+        <h2>Enter User Details</h2>
+      </div>
+      <p class="muted">Fill in the details below, then proceed to the 3-stage biometric face capture.</p>
+      {% if error %}<p class="error">&#9888;&#65039; {{ error }}</p>{% endif %}
+
+      <form method="post" action="/user/start-capture" id="registerForm">
+        <label for="regName">Full Name</label>
+        <input id="regName" name="name" type="text" placeholder="e.g. John Doe" required>
+
+        <label for="regPlace">Place of Living</label>
+        <input id="regPlace" name="place" type="text" placeholder="e.g. New York" required>
+
+        <label for="regPhone">Phone Number</label>
+        <input id="regPhone" name="phone" type="text" placeholder="e.g. +1 234 567 8901" required>
+
+        <button type="submit" class="btn-primary" id="startCaptureBtn">&#128248; Start Face Capture &rarr;</button>
+      </form>
+    </section>
+
+    <section class="card glass">
+      <div class="card-header">
+        <span class="card-icon">&#128640;</span>
+        <h2>Capture Workflow</h2>
+      </div>
+      <p class="muted">You will complete 3 stages to build a robust biometric profile.</p>
+      <div class="stage-list">
+        <div class="stage-item">
+          <span class="stage-num">1</span>
+          <div><strong>Turn Left</strong><p class="muted small">Slowly turn your head to the left</p></div>
+        </div>
+        <div class="stage-item">
+          <span class="stage-num">2</span>
+          <div><strong>Turn Right</strong><p class="muted small">Slowly turn your head to the right</p></div>
+        </div>
+        <div class="stage-item">
+          <span class="stage-num stage-num-final">3</span>
+          <div><strong>Final Registration</strong><p class="muted small">Look straight ahead for the final capture</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

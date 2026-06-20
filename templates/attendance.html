@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AegisAI real-time attendance tracking dashboard">
+<title>Attendance | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <div class="topbar-brand">
+      <span class="topbar-icon">&#128202;</span>
+      <h1>Attendance Dashboard</h1>
+    </div>
+    <nav class="topbar-nav">
+      <span class="chip">&#128197; {{ today }}</span>
+      <a class="btn-link" href="/admin/scan">&#8592; Scan Console</a>
+      <a class="btn-link btn-link-danger" href="/logout">&#9211; Logout</a>
+    </nav>
+  </header>
+
+  <div class="toolbar glass">
+    <div class="toolbar-info">
+      <span class="toolbar-label">Daily Records</span>
+      <span class="toolbar-date">{{ today }}</span>
+    </div>
+    <div class="toolbar-actions">
+      <a class="btn-action btn-export" id="exportCsvBtn" href="/admin/attendance/export?date={{ today_iso }}">&#128190; Export CSV</a>
+      <button class="btn-action btn-clear" id="clearAttendanceBtn" type="button" disabled title="Export CSV first to enable clear">&#128465; Clear Attendance</button>
+    </div>
+  </div>
+
+  <main class="attendance-grid">
+    <section class="card glass">
+      <div class="card-header">
+        <span class="card-icon card-icon-green">&#9989;</span>
+        <h2>Present <span class="count-badge">{{ present|length }}</span></h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Place</th><th>Phone</th><th>Last Seen</th><th>Actions</th></tr></thead>
+          <tbody id="presentTable">
+            {% for p in present %}
+            <tr data-person-id="{{ p.person_id }}" data-status="present">
+              <td>{{ p.name }}</td>
+              <td>{{ p.place }}</td>
+              <td>{{ p.phone }}</td>
+              <td>{{ p.last_seen }}</td>
+              <td class="action-cell">
+                <button class="btn-icon btn-edit" type="button" title="Edit status">&#9998;</button>
+                <button class="btn-icon btn-delete" type="button" title="Remove record">&#128465;</button>
+              </td>
+            </tr>
+            {% endfor %}
+            {% if present|length == 0 %}<tr class="empty-placeholder"><td colspan="5" class="empty-row">No attendance records yet.</td></tr>{% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card glass">
+      <div class="card-header">
+        <span class="card-icon card-icon-red">&#10060;</span>
+        <h2>Absent <span class="count-badge count-badge-red">{{ absent|length }}</span></h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Place</th><th>Phone</th><th>Actions</th></tr></thead>
+          <tbody id="absentTable">
+            {% for p in absent %}
+            <tr data-person-id="{{ p.person_id }}" data-status="absent">
+              <td>{{ p.name }}</td>
+              <td>{{ p.place }}</td>
+              <td>{{ p.phone }}</td>
+              <td class="action-cell">
+                <button class="btn-icon btn-edit" type="button" title="Edit status">&#9998;</button>
+                <button class="btn-icon btn-delete" type="button" title="Remove record">&#128465;</button>
+              </td>
+            </tr>
+            {% endfor %}
+            {% if absent|length == 0 %}<tr class="empty-placeholder"><td colspan="4" class="empty-row">No absentees currently.</td></tr>{% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay hidden" id="attendanceModal">
+    <div class="modal glass">
+      <div class="modal-header">
+        <h3>Edit Attendance Status</h3>
+        <button class="modal-close" type="button" id="closeAttendanceModal">&times;</button>
+      </div>
+      <form id="attendanceEditForm">
+        <input type="hidden" id="editPersonId">
+        <p class="modal-person" id="editPersonName"></p>
+        <label for="editStatus">Status</label>
+        <select id="editStatus" required>
+          <option value="present">Present</option>
+          <option value="absent">Absent</option>
+        </select>
+        <div class="modal-actions">
+          <button class="btn-secondary" type="button" id="cancelAttendanceEdit">Cancel</button>
+          <button class="btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script>
+    window.ATTENDANCE_DATE = "{{ today_iso }}";
+  </script>
+  <script src="/static/attendance.js"></script>
+</body>
+</html>

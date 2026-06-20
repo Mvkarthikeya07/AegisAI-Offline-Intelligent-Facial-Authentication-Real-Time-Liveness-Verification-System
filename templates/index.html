@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AegisAI Admin Scan Console - Real-time biometric face authentication dashboard">
+<title>Scan Console | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar glass">
+  <div class="topbar-brand">
+    <span class="topbar-icon">&#9737;</span>
+    <h1>Scan Console</h1>
+  </div>
+  <nav class="topbar-nav">
+    <span class="chip">&#128100; {{ username }}</span>
+    <a class="btn-link" href="/admin/attendance">&#128202; Attendance</a>
+    <a class="btn-link" href="/admin/people">&#128101; People</a>
+    <a class="btn-link btn-link-danger" href="/logout">&#9211; Logout</a>
+  </nav>
+</header>
+
+<div class="main-container">
+  <aside class="left-panel glass">
+    <div class="panel-header">
+      <span class="panel-icon">&#128274;</span>
+      <h2>Live Biometric Gate</h2>
+    </div>
+    <p class="panel-desc">Real-time face capture, identity recognition, and automatic attendance marking powered by YOLOv8s AI.</p>
+
+    <div class="info-card">
+      <div class="metric"><span class="metric-label">&#128737; Threat Monitor</span><span class="metric-badge badge-green">STABLE</span></div>
+      <div class="metric"><span class="metric-label">&#129504; Face Engine</span><span class="metric-badge badge-green">ACTIVE</span></div>
+      <div class="metric"><span class="metric-label">&#128272; Auth Policy</span><span class="metric-badge badge-green">STRICT</span></div>
+      <div class="metric"><span class="metric-label">&#127912; AI Model</span><span class="metric-badge badge-cyan">Face Classifier</span></div>
+    </div>
+
+    <div class="instruction-card">
+      <h3>&#128161; Instructions</h3>
+      <p id="instructionText">Press Start to begin face scanning.</p>
+    </div>
+
+    <div class="scan-controls">
+      <button class="btn-primary btn-scan" id="startScanBtn" type="button">&#9654; Start Scan</button>
+      <button class="btn-secondary btn-scan" id="stopScanBtn" type="button" disabled>&#9632; Stop Scan</button>
+    </div>
+  </aside>
+
+  <section class="right-panel glass">
+    <div id="trainingBanner" class="training-banner hidden">
+      <span class="pulse-dot"></span>
+      YOLOv8s Face Engine training in progress &mdash; model will auto-reload in ~45s...
+    </div>
+    <div class="camera-container">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="overlay"></canvas>
+      <div class="camera-badge glass">LIVE</div>
+    </div>
+    <div class="bottom-panel">
+      <div class="status-box">
+        <div class="status-label">Status</div>
+        <div class="status-value" id="statusText">Waiting...</div>
+      </div>
+      <div class="status-box">
+        <div class="status-label">Confidence</div>
+        <div class="status-value status-value-accent" id="confidenceText">0%</div>
+      </div>
+      <div class="status-box">
+        <div class="status-label">Identity</div>
+        <div class="status-value" id="userText">Unknown</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

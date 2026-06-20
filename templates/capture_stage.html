@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AegisAI multi-stage biometric face capture workflow">
+<title>Face Capture | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <div class="topbar-brand">
+      <span class="topbar-icon">&#128248;</span>
+      <h1>Face Capture</h1>
+    </div>
+    <nav class="topbar-nav">
+      <span class="chip">&#128100; {{ username }}</span>
+      <a class="btn-link" href="/user/register">&#8592; Back</a>
+      <a class="btn-link btn-link-danger" href="/logout">&#9211; Logout</a>
+    </nav>
+  </header>
+
+  <main class="register-layout">
+    <section class="card glass form-card">
+      <div class="card-header">
+        <span class="card-icon">&#127916;</span>
+        <h2>{{ prompt }}</h2>
+      </div>
+      <p class="muted">Follow the instruction on screen, then click the capture button.</p>
+
+      <div class="stage-list">
+        {% for stage_name in stages %}
+        <div class="stage-item {% if stage_name == step %}stage-active{% endif %}">
+          <span class="stage-num {% if stage_name == step %}stage-num-active{% endif %}">{{ loop.index }}</span>
+          <div>
+            <strong>{{ stage_name|upper }}</strong>
+            {% if stage_name == step %}<span class="badge-current">Current</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button id="stageCaptureBtn" class="btn-primary">{% if step == 'final' %}&#128274; Final Register{% else %}&#128248; Capture This Stage{% endif %}</button>
+      <p id="stageMessage" class="muted stage-message"></p>
+      <div id="finalDetails" class="saved-details hidden"></div>
+    </section>
+
+    <section class="card glass camera-card">
+      <div class="camera-container">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="overlay"></canvas>
+        <div class="camera-badge glass">LIVE</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    window.CAPTURE_STEP = "{{ step }}";
+  </script>
+  <script src="/static/capture_stage.js"></script>
+</body>
+</html>

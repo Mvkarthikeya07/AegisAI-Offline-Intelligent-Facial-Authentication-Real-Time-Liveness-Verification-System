@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AegisAI registered biometric identities database">
+<title>Registered People | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar glass">
+    <div class="topbar-brand">
+      <span class="topbar-icon">&#128101;</span>
+      <h1>Registered People</h1>
+    </div>
+    <nav class="topbar-nav">
+      <span class="chip">&#128100; {{ username }}</span>
+      <a class="btn-link" href="/admin/scan">&#8592; Scan Console</a>
+      <a class="btn-link" href="/admin/attendance">&#128202; Attendance</a>
+      <a class="btn-link btn-link-danger" href="/logout">&#9211; Logout</a>
+    </nav>
+  </header>
+
+  <div class="toolbar glass">
+    <div class="toolbar-info">
+      <span class="toolbar-label">Biometric Database</span>
+      <span class="toolbar-date">{{ people|length }} registered</span>
+    </div>
+    <div class="toolbar-actions">
+      <a class="btn-action btn-export" id="exportPeopleBtn" href="/admin/people/export">&#128190; Export CSV</a>
+    </div>
+  </div>
+
+  <main class="people-grid">
+    <section class="card glass" style="grid-column: 1 / -1;">
+      <div class="card-header">
+        <span class="card-icon">&#128100;</span>
+        <h2>All Identities <span class="count-badge">{{ people|length }}</span></h2>
+      </div>
+      <p class="muted">Manage registered people. Supports hundreds of identities with the YOLOv8s face classifier.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Place</th>
+              <th>Phone</th>
+              <th>Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="peopleTable">
+            {% for p in people %}
+            <tr data-person-id="{{ p.id }}" data-name="{{ p.name }}" data-place="{{ p.place }}" data-phone="{{ p.phone }}">
+              <td class="row-num">{{ loop.index }}</td>
+              <td><strong>{{ p.name }}</strong></td>
+              <td>{{ p.place }}</td>
+              <td>{{ p.phone }}</td>
+              <td>{{ p.created_at }}</td>
+              <td class="action-cell">
+                <button class="btn-icon btn-edit" type="button" title="Edit details">&#9998;</button>
+                <button class="btn-icon btn-delete" type="button" title="Delete person">&#128465;</button>
+              </td>
+            </tr>
+            {% endfor %}
+            {% if people|length == 0 %}
+            <tr class="empty-placeholder"><td colspan="6" class="empty-row">No registered identities found yet. Register users via the User portal.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay hidden" id="peopleModal">
+    <div class="modal glass">
+      <div class="modal-header">
+        <h3>Edit Person Details</h3>
+        <button class="modal-close" type="button" id="closePeopleModal">&times;</button>
+      </div>
+      <form id="peopleEditForm">
+        <input type="hidden" id="editPersonId">
+        <label for="editName">Name</label>
+        <input id="editName" type="text" required>
+        <label for="editPlace">Place</label>
+        <input id="editPlace" type="text" required>
+        <label for="editPhone">Phone</label>
+        <input id="editPhone" type="text" required>
+        <div class="modal-actions">
+          <button class="btn-secondary" type="button" id="cancelPeopleEdit">Cancel</button>
+          <button class="btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/static/people.js"></script>
+</body>
+</html>

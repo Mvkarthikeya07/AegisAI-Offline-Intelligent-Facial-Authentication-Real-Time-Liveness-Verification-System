@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Secure offline biometric facial authentication system with AI-powered liveness detection">
+<title>Secure Login | AegisAI FaceAuth</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-grid">
+    <section class="brand-panel glass">
+      <p class="eyebrow">BIOMETRIC IDENTITY PLATFORM</p>
+      <h1>AegisAI<br>FaceAuth</h1>
+      <p class="lead">Military-grade offline facial authentication with real-time liveness verification, anti-spoof protection, and AI-powered identity recognition.</p>
+      <div class="pill-row">
+        <span class="pill">🛡️ Zero Cloud Dependency</span>
+        <span class="pill">🔬 YOLOv8s AI Engine</span>
+        <span class="pill">👁️ Liveness Detection</span>
+        <span class="pill">🔒 Role-based Access</span>
+      </div>
+    </section>
+
+    <form class="auth-panel glass" method="post" action="/login" id="loginForm">
+      <h2>{{ 'Admin Login' if role == 'admin' else 'User Login' }}</h2>
+      <p class="muted">Authenticate with your credentials to continue.</p>
+      {% if error %}<p class="error">⚠️ {{ error }}</p>{% endif %}
+
+      <input type="hidden" name="role" value="{{ role }}">
+
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername" name="username" placeholder="Enter your username" autocomplete="username" required>
+
+      <label for="loginPassword">Password</label>
+      <div class="password-wrap">
+        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+        <button type="button" class="eye-btn" onclick="togglePassword('loginPassword', this)">&#128065;</button>
+      </div>
+
+      <button type="submit" class="btn-primary" id="signInBtn">Sign In →</button>
+
+      <div class="role-switch">
+        <a href="/login?role=admin" class="{{ 'active' if role == 'admin' else '' }}">🔑 Admin</a>
+        <a href="/login?role=user" class="{{ 'active' if role == 'user' else '' }}">👤 User</a>
+      </div>
+      <p class="auth-linkline"><a href="/signup?role={{ role }}">Need account? Create {{ role }} account</a></p>
+      <p class="auth-linkline"><a href="/forgot-password?role={{ role }}">Forgot password?</a></p>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.classList.add('active-eye');
+      } else {
+        input.type = 'password';
+        btn.classList.remove('active-eye');
+      }
+    }
+  </script>
+</body>
+</html>
