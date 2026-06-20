@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+
+# YOLOv8 training artifacts
+runs/
+*.pt
+!models/yolov8s-cls.pt
+!models/yolov8s_face_classifier.pt
+*.yaml
+
+# Embeddings (generated at runtime)
+embeddings/users.pkl
+embeddings/trained_index.pkl
+
+# Database (contains biometric data — never commit)
+database.db
+database.db-shm
+database.db-wal
+
+# Dataset (contains face images — never commit)
+dataset/
+
+# Models (large binary files — optionally exclude base weights)
+models/mobilefacenet.tflite
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
