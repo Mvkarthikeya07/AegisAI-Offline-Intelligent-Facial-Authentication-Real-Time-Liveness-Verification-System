@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ AegisAI
+# 🛡️ AegisAI Offline Intelligent Facial Authentication Real Time Liveness Verification System
 
 ### Offline Intelligent Facial Authentication & Real-Time Liveness Verification
 
